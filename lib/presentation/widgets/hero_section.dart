@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:about/core/constants/info.dart';
 import 'package:about/core/dimensions.dart';
 import 'package:about/core/responsive.dart';
 import 'package:about/core/theme/app_colors.dart';
 import 'package:about/presentation/blocs/hover/hover_cubit.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HeroSection extends StatelessWidget {
@@ -29,7 +29,8 @@ class HeroSection extends StatelessWidget {
       child: Container(
         width: double.infinity,
         constraints: const BoxConstraints(maxWidth: Dimensions.maxWidth),
-        padding: EdgeInsets.symmetric(horizontal: isMobile ? width * 0.05 : Dimensions.spaceXXL),
+        padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? width * 0.05 : Dimensions.spaceXXL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -49,7 +50,7 @@ class HeroSection extends StatelessWidget {
                 style: GoogleFonts.inter(
                   fontSize: headerSize,
                   fontWeight: FontWeight.w400,
-                  color: AppColors.textPrimary,
+                  color: context.colors.textPrimary,
                   height: 1.3,
                 ),
                 children: [
@@ -58,7 +59,7 @@ class HeroSection extends StatelessWidget {
                     text: AppInfo.firstName,
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w800, // Extra bold to stand out
-                      color: AppColors.textPrimary,
+                      color: context.colors.textPrimary,
                     ),
                   ),
                 ],
@@ -75,7 +76,7 @@ class HeroSection extends StatelessWidget {
               style: GoogleFonts.inter(
                 fontSize: isMobile ? 18 : 20,
                 fontWeight: FontWeight.w500,
-                color: AppColors.textSecondary,
+                color: context.colors.textSecondary,
               ),
             ).animate().fadeIn(duration: 800.ms, delay: 200.ms),
 
@@ -86,7 +87,7 @@ class HeroSection extends StatelessWidget {
               AppInfo.bio,
               style: GoogleFonts.inter(
                 fontSize: isMobile ? 14 : 16,
-                color: AppColors.textSecondary,
+                color: context.colors.textSecondary,
                 height: 1.7,
               ),
             ).animate().fadeIn(duration: 800.ms, delay: 400.ms),
@@ -120,7 +121,8 @@ class HeroSection extends StatelessWidget {
               spacing: Dimensions.spaceL,
               runSpacing: Dimensions.spaceM,
               children: [
-                if (AppInfo.showGithub) _socialIcon(FontAwesomeIcons.github, AppInfo.githubUrl),
+                if (AppInfo.showGithub)
+                  _socialIcon(FontAwesomeIcons.github, AppInfo.githubUrl),
                 if (AppInfo.showLinkedIn)
                   _socialIcon(
                     FontAwesomeIcons.linkedin,
@@ -194,21 +196,26 @@ class _HoverCTAButton extends StatelessWidget {
               duration: const Duration(milliseconds: 200),
               padding: EdgeInsets.symmetric(
                 horizontal: isMobile ? Dimensions.spaceL : Dimensions.spaceXL,
-                vertical: isMobile ? Dimensions.spaceM / 1.33 : Dimensions.spaceM / 1.14, // approx 12, 14
+                vertical: isMobile
+                    ? Dimensions.spaceM / 1.33
+                    : Dimensions.spaceM / 1.14, // approx 12, 14
               ),
               decoration: BoxDecoration(
-                color: isPrimary ? AppColors.primary : AppColors.surface,
+                color:
+                    isPrimary ? context.colors.primary : context.colors.surface,
                 border: isPrimary
                     ? null
                     : Border.all(
-                        color: isHovered ? AppColors.primary : AppColors.border,
+                        color: isHovered
+                            ? context.colors.primary
+                            : context.colors.border,
                         width: isHovered ? 2 : 1,
                       ),
                 borderRadius: BorderRadius.circular(Dimensions.radiusFull),
                 boxShadow: isPrimary
                     ? [
                         BoxShadow(
-                          color: AppColors.shadowStrong,
+                          color: context.colors.shadowStrong,
                           blurRadius: isHovered ? 15 : 10,
                           offset: Offset(0, isHovered ? 6 : 4),
                         ),
@@ -220,7 +227,9 @@ class _HoverCTAButton extends StatelessWidget {
                 style: GoogleFonts.inter(
                   fontSize: isMobile ? 13 : 14,
                   fontWeight: FontWeight.w600,
-                  color: isPrimary ? AppColors.surface : AppColors.textPrimary,
+                  color: isPrimary
+                      ? context.colors.surface
+                      : context.colors.textPrimary,
                 ),
               ),
             );
@@ -260,7 +269,9 @@ class _HoverSocialIcon extends StatelessWidget {
               ),
               child: Icon(
                 icon,
-                color: isHovered ? AppColors.primary : AppColors.textTertiary,
+                color: isHovered
+                    ? context.colors.primary
+                    : context.colors.textTertiary,
                 size: Dimensions.iconM,
               ),
             );

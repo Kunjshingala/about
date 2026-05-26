@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:about/core/constants/experience.dart';
 import 'package:about/core/dimensions.dart';
 import 'package:about/core/responsive.dart';
 import 'package:about/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ExperienceSection extends StatelessWidget {
   const ExperienceSection({super.key});
@@ -19,7 +19,8 @@ class ExperienceSection extends StatelessWidget {
       child: Container(
         width: double.infinity,
         constraints: const BoxConstraints(maxWidth: Dimensions.maxWidth),
-        padding: EdgeInsets.symmetric(horizontal: isMobile ? width * 0.05 : Dimensions.spaceXXL),
+        padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? width * 0.05 : Dimensions.spaceXXL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -30,16 +31,16 @@ class ExperienceSection extends StatelessWidget {
               style: GoogleFonts.inter(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: context.colors.textPrimary,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'My professional journey in mobile development',
+              'Two years, 40+ shipped apps, one very fast learning curve.',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: AppColors.textSecondary,
+                color: context.colors.textSecondary,
                 fontSize: isMobile ? 12 : 13,
               ),
             ),
@@ -81,12 +82,12 @@ class ExperienceSection extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(isMobile ? 24 : 32),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.surface),
+        border: Border.all(color: context.colors.surface),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadow,
+            color: context.colors.shadow,
             blurRadius: 30,
             offset: const Offset(0, 10),
           ),
@@ -105,7 +106,9 @@ class ExperienceSection extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: date.contains('Present') ? AppColors.primary : AppColors.borderLight,
+                    color: date.contains('Present')
+                        ? context.colors.primary
+                        : context.colors.borderLight,
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Text(
@@ -115,7 +118,9 @@ class ExperienceSection extends StatelessWidget {
                     style: GoogleFonts.inter(
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
-                      color: date.contains('Present') ? AppColors.surface : AppColors.textSecondary,
+                      color: date.contains('Present')
+                          ? context.colors.surface
+                          : context.colors.textSecondary,
                     ),
                   ),
                 ),
@@ -127,7 +132,7 @@ class ExperienceSection extends StatelessWidget {
                   style: TextStyle(
                     fontSize: isMobile ? 18 : 20,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
+                    color: context.colors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -136,7 +141,7 @@ class ExperienceSection extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: AppColors.textSecondary,
+                    color: context.colors.textSecondary,
                     fontWeight: FontWeight.w500,
                     fontSize: isMobile ? 12 : 13,
                   ),
@@ -156,10 +161,10 @@ class ExperienceSection extends StatelessWidget {
                         title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
+                          color: context.colors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -167,8 +172,8 @@ class ExperienceSection extends StatelessWidget {
                         company,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: AppColors.textSecondary,
+                        style: TextStyle(
+                          color: context.colors.textSecondary,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -181,7 +186,9 @@ class ExperienceSection extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: date.contains('Present') ? AppColors.primary : AppColors.borderLight,
+                    color: date.contains('Present')
+                        ? context.colors.primary
+                        : context.colors.borderLight,
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Text(
@@ -191,7 +198,9 @@ class ExperienceSection extends StatelessWidget {
                     style: GoogleFonts.inter(
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
-                      color: date.contains('Present') ? AppColors.surface : AppColors.textSecondary,
+                      color: date.contains('Present')
+                          ? context.colors.surface
+                          : context.colors.textSecondary,
                     ),
                   ),
                 ),
@@ -213,7 +222,7 @@ class ExperienceSection extends StatelessWidget {
                     child: Text(
                       bp,
                       style: TextStyle(
-                        color: AppColors.textPrimary,
+                        color: context.colors.textPrimary,
                         height: 1.5,
                         fontSize: isMobile ? 13 : 14,
                       ),
@@ -224,17 +233,17 @@ class ExperienceSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          const Divider(color: AppColors.borderLight),
+          Divider(color: context.colors.borderLight),
           const SizedBox(height: 16),
           Wrap(
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              const Text(
+              Text(
                 'STACK',
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textTertiary,
+                  color: context.colors.textTertiary,
                   letterSpacing: 1,
                 ),
               ),
@@ -247,15 +256,15 @@ class ExperienceSection extends StatelessWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.tagBackground,
-                    border: Border.all(color: AppColors.border),
+                    color: context.colors.tagBackground,
+                    border: Border.all(color: context.colors.border),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     tag,
                     style: TextStyle(
                       fontSize: isMobile ? 11 : 12,
-                      color: AppColors.textSecondary,
+                      color: context.colors.textSecondary,
                     ),
                   ),
                 ),

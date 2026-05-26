@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import 'package:about/core/constants/info.dart';
 import 'package:about/core/dimensions.dart';
 import 'package:about/core/responsive.dart';
 import 'package:about/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'package:about/presentation/widgets/theme_toggle_button.dart';
 
 class GlassNavbar extends StatelessWidget {
   const GlassNavbar({
@@ -28,7 +29,7 @@ class GlassNavbar extends StatelessWidget {
     final isMobile = Responsive.isMobile(context);
 
     return Container(
-      decoration: BoxDecoration(color: AppColors.navBackground),
+      decoration: BoxDecoration(color: context.colors.navBackground),
       child: Center(
         child: Container(
           constraints: const BoxConstraints(maxWidth: Dimensions.maxWidth),
@@ -47,7 +48,7 @@ class GlassNavbar extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 8),
                       child: IconButton(
                         icon: const Icon(Icons.arrow_back, size: 20),
-                        color: AppColors.textPrimary,
+                        color: context.colors.textPrimary,
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                         onPressed: onBackTap,
@@ -61,7 +62,7 @@ class GlassNavbar extends StatelessWidget {
                         fontSize: isMobile ? 12 : 14,
                         fontWeight: FontWeight.bold,
                         letterSpacing: -0.5,
-                        color: AppColors.textPrimary,
+                        color: context.colors.textPrimary,
                       ),
                     ),
                   ),
@@ -70,23 +71,32 @@ class GlassNavbar extends StatelessWidget {
               if (!isMobile && showNavItems)
                 Row(
                   children: [
-                    _navItem('About'),
+                    _navItem('About', context),
                     const SizedBox(width: 24),
-                    _navItem('Stats'),
+                    _navItem('Stats', context),
                     const SizedBox(width: 24),
-                    _navItem('Experience'),
+                    _navItem('Experience', context),
                     const SizedBox(width: 24),
-                    _navItem('Projects'),
+                    _navItem('Projects', context),
                     const SizedBox(width: 24),
-                    _navItem('Contact'),
+                    if (AppInfo.showContact) ...[
+                      _navItem('Contact', context),
+                      const SizedBox(width: 24),
+                    ],
+                    const ThemeToggleButton(),
                   ],
                 )
               else if (isMobile && onMenuTap != null)
-                IconButton(
-                  icon: const Icon(Icons.menu),
-                  color: AppColors.primary,
-                  iconSize: 20,
-                  onPressed: onMenuTap,
+                Row(
+                  children: [
+                    const ThemeToggleButton(),
+                    IconButton(
+                      icon: const Icon(Icons.menu),
+                      color: context.colors.primary,
+                      iconSize: 20,
+                      onPressed: onMenuTap,
+                    ),
+                  ],
                 ),
             ],
           ),
@@ -95,7 +105,7 @@ class GlassNavbar extends StatelessWidget {
     );
   }
 
-  Widget _navItem(String title) {
+  Widget _navItem(String title, BuildContext context) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -105,7 +115,7 @@ class GlassNavbar extends StatelessWidget {
           style: GoogleFonts.inter(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: AppColors.textSecondary,
+            color: context.colors.textSecondary,
           ),
         ),
       ),

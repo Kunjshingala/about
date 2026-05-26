@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:about/presentation/screens/all_projects_screen.dart';
 import 'package:about/presentation/screens/resume_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -15,9 +15,11 @@ class AppRouter {
             pageBuilder: (context, state) => CustomTransitionPage(
               key: state.pageKey,
               child: const ResumeScreen(),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 return FadeTransition(
-                  opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
+                  opacity: CurveTween(curve: Curves.easeInOutCirc)
+                      .animate(animation),
                   child: child,
                 );
               },
@@ -28,7 +30,8 @@ class AppRouter {
             pageBuilder: (context, state) => CustomTransitionPage(
               key: state.pageKey,
               child: const AllProjectsScreen(),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 return SlideTransition(
                   position: animation.drive(
                     Tween<Offset>(

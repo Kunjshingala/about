@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:about/core/dimensions.dart';
 import 'package:about/core/responsive.dart';
 import 'package:about/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SkillsSection extends StatelessWidget {
   const SkillsSection({super.key});
@@ -17,7 +17,8 @@ class SkillsSection extends StatelessWidget {
       child: Container(
         width: double.infinity,
         constraints: const BoxConstraints(maxWidth: Dimensions.maxWidth),
-        padding: EdgeInsets.symmetric(horizontal: isMobile ? width * 0.05 : Dimensions.spaceXXL),
+        padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? width * 0.05 : Dimensions.spaceXXL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -28,35 +29,46 @@ class SkillsSection extends StatelessWidget {
               style: GoogleFonts.inter(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: context.colors.textPrimary,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Technologies and tools I work with',
+              'What I build with, and why it matters.',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: AppColors.textSecondary,
+                color: context.colors.textSecondary,
                 fontSize: isMobile ? 12 : 13,
               ),
             ),
             const SizedBox(height: 40),
 
-            // Language
-            _skillCategory('Language', ['Dart', 'Java'], context)
+            // Shipping Cross-Platform Apps
+            _skillCategory(
+                    'Shipping Cross-Platform Apps',
+                    [
+                      'Flutter',
+                      'Dart',
+                      'Clean Architecture',
+                      'MVVM',
+                      'GoRouter',
+                      'GetIt',
+                    ],
+                    context)
                 .animate()
                 .fadeIn(duration: 600.ms, delay: 100.ms)
                 .slideX(begin: -0.1),
             const SizedBox(height: 24),
 
-            // Technologies
+            // Managing State
             _skillCategory(
-                    'Technologies',
+                    'Managing State (Without Breaking Things)',
                     [
-                      'Flutter',
-                      'Firebase',
-                      'REST API Integration',
+                      'RxDart (BehaviorSubject)',
+                      'BLoC (flutter_bloc)',
+                      'Redux',
+                      'GetX',
                     ],
                     context)
                 .animate()
@@ -64,13 +76,15 @@ class SkillsSection extends StatelessWidget {
                 .slideX(begin: -0.1),
             const SizedBox(height: 24),
 
-            // State Management & Storage
+            // Storing Data
             _skillCategory(
-                    'State Management & Storage',
+                    'Storing Data (Offline-First, Synced Later)',
                     [
-                      'Bloc',
-                      'Redux',
                       'Hive',
+                      'SharedPreferences',
+                      'SQLite',
+                      'Firebase Firestore',
+                      'Firebase Realtime Database',
                     ],
                     context)
                 .animate()
@@ -78,12 +92,13 @@ class SkillsSection extends StatelessWidget {
                 .slideX(begin: -0.1),
             const SizedBox(height: 24),
 
-            // Database
+            // Backend & Real-Time Updates
             _skillCategory(
-                    'Database',
+                    'Backend & Real-Time Updates',
                     [
-                      'Firebase Firestore',
-                      'MySQL',
+                      'Firebase (Auth, Storage, Crashlytics, FCM)',
+                      'REST API (Dio/HTTP)',
+                      'WebSocket',
                     ],
                     context)
                 .animate()
@@ -91,15 +106,14 @@ class SkillsSection extends StatelessWidget {
                 .slideX(begin: -0.1),
             const SizedBox(height: 24),
 
-            // Tools
+            // Platform-Native Features
             _skillCategory(
-                    'Tools',
+                    'Platform-Native Features',
                     [
-                      'Git',
-                      'GitHub',
-                      'Android Studio',
-                      'VS Code',
-                      'Postman',
+                      'Platform Channels',
+                      'RemoteView (Android)',
+                      'LiveActivity (iOS)',
+                      'Deep Linking',
                     ],
                     context)
                 .animate()
@@ -107,19 +121,54 @@ class SkillsSection extends StatelessWidget {
                 .slideX(begin: -0.1),
             const SizedBox(height: 24),
 
-            // Other Skills
+            // Third-Party Integrations
             _skillCategory(
-                    'Other Skills',
+                    'Third-Party Integrations',
                     [
-                      'Deep Linking',
-                      'Push Notifications',
                       'Google Maps',
-                      'App Deployment',
-                      'Third-Party SDK Integration',
+                      'Payment Gateways',
+                      'Social Logins',
+                      'Intercom',
+                      'Face Detection',
+                      'Audio/Video Player',
                     ],
                     context)
                 .animate()
                 .fadeIn(duration: 600.ms, delay: 600.ms)
+                .slideX(begin: -0.1),
+            const SizedBox(height: 24),
+
+            // Deployment
+            _skillCategory(
+                    'Deployment (The Part Most Devs Avoid)',
+                    [
+                      'Play Store',
+                      'App Store',
+                      'TestFlight',
+                      'App Signing',
+                      'Provisioning Profiles',
+                    ],
+                    context)
+                .animate()
+                .fadeIn(duration: 600.ms, delay: 700.ms)
+                .slideX(begin: -0.1),
+            const SizedBox(height: 24),
+
+            // Tools I Use Daily
+            _skillCategory(
+                    'Tools I Use Daily',
+                    [
+                      'Git/GitHub',
+                      'Android Studio',
+                      'Xcode',
+                      'VS Code',
+                      'Postman',
+                      'Figma',
+                      'Flutter DevTools',
+                    ],
+                    context)
+                .animate()
+                .fadeIn(duration: 600.ms, delay: 800.ms)
                 .slideX(begin: -0.1),
           ],
         ),
@@ -142,7 +191,7 @@ class SkillsSection extends StatelessWidget {
           style: TextStyle(
             fontSize: isMobile ? 10 : 11,
             fontWeight: FontWeight.bold,
-            color: AppColors.textTertiary,
+            color: context.colors.textTertiary,
             letterSpacing: 1.5,
           ),
         ),
@@ -158,8 +207,8 @@ class SkillsSection extends StatelessWidget {
                     vertical: isMobile ? 8 : 10,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.fieldBackground,
-                    border: Border.all(color: AppColors.border),
+                    color: context.colors.fieldBackground,
+                    border: Border.all(color: context.colors.border),
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Text(
@@ -167,7 +216,7 @@ class SkillsSection extends StatelessWidget {
                     style: TextStyle(
                       fontSize: isMobile ? 12 : 13,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimary,
+                      color: context.colors.textPrimary,
                     ),
                   ),
                 ),
