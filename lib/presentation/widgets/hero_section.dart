@@ -157,7 +157,7 @@ class HeroSection extends StatelessWidget {
     );
   }
 
-  Widget _socialIcon(IconData icon, String url) {
+  Widget _socialIcon(dynamic icon, String url) {
     return BlocProvider(
       create: (context) => HoverCubit(),
       child: _HoverSocialIcon(icon: icon, url: url),
@@ -242,7 +242,7 @@ class _HoverCTAButton extends StatelessWidget {
 
 class _HoverSocialIcon extends StatelessWidget {
   const _HoverSocialIcon({required this.icon, required this.url});
-  final IconData icon;
+  final dynamic icon;
   final String url;
 
   @override
@@ -267,7 +267,7 @@ class _HoverSocialIcon extends StatelessWidget {
                 isHovered ? 1.2 : 1.0,
                 1.0,
               ),
-              child: Icon(
+              child: FaIcon(
                 icon,
                 color: isHovered
                     ? context.colors.primary
