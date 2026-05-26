@@ -35,7 +35,7 @@ class ExperienceSection extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'My professional journey in mobile development',
+              'Two years, 40+ shipped apps, one very fast learning curve.',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(

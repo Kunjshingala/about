@@ -33,7 +33,7 @@ class SkillsSection extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Technologies and tools I work with',
+              'What I build with, and why it matters.',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -43,20 +43,31 @@ class SkillsSection extends StatelessWidget {
             ),
             const SizedBox(height: 40),
 
-            // Language
-            _skillCategory('Language', ['Dart', 'Java'], context)
+            // Shipping Cross-Platform Apps
+            _skillCategory(
+                    'Shipping Cross-Platform Apps',
+                    [
+                      'Flutter',
+                      'Dart',
+                      'Clean Architecture',
+                      'MVVM',
+                      'GoRouter',
+                      'GetIt',
+                    ],
+                    context)
                 .animate()
                 .fadeIn(duration: 600.ms, delay: 100.ms)
                 .slideX(begin: -0.1),
             const SizedBox(height: 24),
 
-            // Technologies
+            // Managing State
             _skillCategory(
-                    'Technologies',
+                    'Managing State (Without Breaking Things)',
                     [
-                      'Flutter',
-                      'Firebase',
-                      'REST API Integration',
+                      'RxDart (BehaviorSubject)',
+                      'BLoC (flutter_bloc)',
+                      'Redux',
+                      'GetX',
                     ],
                     context)
                 .animate()
@@ -64,13 +75,15 @@ class SkillsSection extends StatelessWidget {
                 .slideX(begin: -0.1),
             const SizedBox(height: 24),
 
-            // State Management & Storage
+            // Storing Data
             _skillCategory(
-                    'State Management & Storage',
+                    'Storing Data (Offline-First, Synced Later)',
                     [
-                      'Bloc',
-                      'Redux',
                       'Hive',
+                      'SharedPreferences',
+                      'SQLite',
+                      'Firebase Firestore',
+                      'Firebase Realtime Database',
                     ],
                     context)
                 .animate()
@@ -78,12 +91,13 @@ class SkillsSection extends StatelessWidget {
                 .slideX(begin: -0.1),
             const SizedBox(height: 24),
 
-            // Database
+            // Backend & Real-Time Updates
             _skillCategory(
-                    'Database',
+                    'Backend & Real-Time Updates',
                     [
-                      'Firebase Firestore',
-                      'MySQL',
+                      'Firebase (Auth, Storage, Crashlytics, FCM)',
+                      'REST API (Dio/HTTP)',
+                      'WebSocket',
                     ],
                     context)
                 .animate()
@@ -91,15 +105,14 @@ class SkillsSection extends StatelessWidget {
                 .slideX(begin: -0.1),
             const SizedBox(height: 24),
 
-            // Tools
+            // Platform-Native Features
             _skillCategory(
-                    'Tools',
+                    'Platform-Native Features',
                     [
-                      'Git',
-                      'GitHub',
-                      'Android Studio',
-                      'VS Code',
-                      'Postman',
+                      'Platform Channels',
+                      'RemoteView (Android)',
+                      'LiveActivity (iOS)',
+                      'Deep Linking',
                     ],
                     context)
                 .animate()
@@ -107,19 +120,54 @@ class SkillsSection extends StatelessWidget {
                 .slideX(begin: -0.1),
             const SizedBox(height: 24),
 
-            // Other Skills
+            // Third-Party Integrations
             _skillCategory(
-                    'Other Skills',
+                    'Third-Party Integrations',
                     [
-                      'Deep Linking',
-                      'Push Notifications',
                       'Google Maps',
-                      'App Deployment',
-                      'Third-Party SDK Integration',
+                      'Payment Gateways',
+                      'Social Logins',
+                      'Intercom',
+                      'Face Detection',
+                      'Audio/Video Player',
                     ],
                     context)
                 .animate()
                 .fadeIn(duration: 600.ms, delay: 600.ms)
+                .slideX(begin: -0.1),
+            const SizedBox(height: 24),
+
+            // Deployment
+            _skillCategory(
+                    'Deployment (The Part Most Devs Avoid)',
+                    [
+                      'Play Store',
+                      'App Store',
+                      'TestFlight',
+                      'App Signing',
+                      'Provisioning Profiles',
+                    ],
+                    context)
+                .animate()
+                .fadeIn(duration: 600.ms, delay: 700.ms)
+                .slideX(begin: -0.1),
+            const SizedBox(height: 24),
+
+            // Tools I Use Daily
+            _skillCategory(
+                    'Tools I Use Daily',
+                    [
+                      'Git/GitHub',
+                      'Android Studio',
+                      'Xcode',
+                      'VS Code',
+                      'Postman',
+                      'Figma',
+                      'Flutter DevTools',
+                    ],
+                    context)
+                .animate()
+                .fadeIn(duration: 600.ms, delay: 800.ms)
                 .slideX(begin: -0.1),
           ],
         ),
