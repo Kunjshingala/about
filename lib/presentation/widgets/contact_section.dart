@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:about/core/constants/info.dart';
 import 'package:about/core/dimensions.dart';
 import 'package:about/core/responsive.dart';
 import 'package:about/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactSection extends StatefulWidget {
@@ -60,9 +60,10 @@ class _ContactSectionState extends State<ContactSection> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: AppColors.primary,
+        backgroundColor: context.colors.primary,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusS)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimensions.radiusS)),
       ),
     );
   }
@@ -76,7 +77,8 @@ class _ContactSectionState extends State<ContactSection> {
       child: Container(
         width: double.infinity,
         constraints: const BoxConstraints(maxWidth: Dimensions.maxWidth),
-        padding: EdgeInsets.symmetric(horizontal: isMobile ? width * 0.05 : Dimensions.spaceXXL),
+        padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? width * 0.05 : Dimensions.spaceXXL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -87,7 +89,7 @@ class _ContactSectionState extends State<ContactSection> {
               style: GoogleFonts.inter(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: context.colors.textPrimary,
               ),
             ),
             const SizedBox(height: Dimensions.spaceS),
@@ -96,19 +98,20 @@ class _ContactSectionState extends State<ContactSection> {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: AppColors.textSecondary,
+                color: context.colors.textSecondary,
                 fontSize: isMobile ? 12 : 13,
               ),
             ),
             const SizedBox(height: Dimensions.spaceXXL),
             Container(
-              padding: EdgeInsets.all(isMobile ? Dimensions.spaceL : Dimensions.spaceXXL),
+              padding: EdgeInsets.all(
+                  isMobile ? Dimensions.spaceL : Dimensions.spaceXXL),
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: context.colors.surface,
                 borderRadius: BorderRadius.circular(Dimensions.radiusL),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.shadow,
+                    color: context.colors.shadow,
                     blurRadius: 30,
                     offset: const Offset(0, 10),
                   ),
@@ -120,7 +123,7 @@ class _ContactSectionState extends State<ContactSection> {
                     "I'm currently available for freelance work or full-time opportunities.",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: AppColors.textSecondary,
+                      color: context.colors.textSecondary,
                       fontSize: isMobile ? 14 : 15,
                       height: 1.6,
                     ),
@@ -128,7 +131,8 @@ class _ContactSectionState extends State<ContactSection> {
                   const SizedBox(height: Dimensions.spaceXXL),
                   if (isMobile) ...[
                     _field('Name', 'Jane Doe', _nameController, context),
-                    const SizedBox(height: Dimensions.spaceL / 1.2), // approx 20
+                    const SizedBox(
+                        height: Dimensions.spaceL / 1.2), // approx 20
                     _field(
                       'Email',
                       'jane@example.com',
@@ -146,7 +150,8 @@ class _ContactSectionState extends State<ContactSection> {
                             context,
                           ),
                         ),
-                        const SizedBox(width: Dimensions.spaceL / 1.2), // approx 20
+                        const SizedBox(
+                            width: Dimensions.spaceL / 1.2), // approx 20
                         Expanded(
                           child: _field(
                             'Email',
@@ -172,10 +177,11 @@ class _ContactSectionState extends State<ContactSection> {
                     child: ElevatedButton(
                       onPressed: _sendEmail,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: AppColors.surface,
+                        backgroundColor: context.colors.primary,
+                        foregroundColor: context.colors.surface,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(Dimensions.radiusFull),
+                          borderRadius:
+                              BorderRadius.circular(Dimensions.radiusFull),
                         ),
                         elevation: 0,
                       ),
@@ -216,7 +222,7 @@ class _ContactSectionState extends State<ContactSection> {
           style: TextStyle(
             fontSize: isMobile ? 9 : 10,
             fontWeight: FontWeight.bold,
-            color: AppColors.textTertiary,
+            color: context.colors.textTertiary,
             letterSpacing: 1.5,
           ),
         ),
@@ -224,15 +230,15 @@ class _ContactSectionState extends State<ContactSection> {
         TextField(
           controller: controller,
           maxLines: maxLines,
-          style: const TextStyle(color: AppColors.textPrimary),
+          style: TextStyle(color: context.colors.textPrimary),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(
-              color: AppColors.textTertiary,
+              color: context.colors.textTertiary,
               fontSize: isMobile ? 13 : 14,
             ),
             filled: true,
-            fillColor: AppColors.fieldBackground,
+            fillColor: context.colors.fieldBackground,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(Dimensions.radiusS),
               borderSide: BorderSide.none,

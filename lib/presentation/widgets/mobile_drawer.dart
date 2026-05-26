@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import 'package:about/core/constants/info.dart';
 import 'package:about/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MobileDrawer extends StatelessWidget {
   const MobileDrawer({super.key, required this.onNavTap});
@@ -11,7 +10,7 @@ class MobileDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: AppColors.surface,
+      backgroundColor: context.colors.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -24,17 +23,17 @@ class MobileDrawer extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1,
-                color: AppColors.textPrimary,
+                color: context.colors.textPrimary,
               ),
             ),
           ),
           const SizedBox(height: 40),
-          const Divider(color: AppColors.borderLight),
-          _drawerItem('About', Icons.person_outline),
-          _drawerItem('Stats', Icons.bar_chart),
-          _drawerItem('Experience', Icons.work_outline),
-          _drawerItem('Projects', Icons.code),
-          _drawerItem('Contact', Icons.email_outlined),
+          Divider(color: context.colors.borderLight),
+          _drawerItem('About', Icons.person_outline, context),
+          _drawerItem('Stats', Icons.bar_chart, context),
+          _drawerItem('Experience', Icons.work_outline, context),
+          _drawerItem('Projects', Icons.code, context),
+          _drawerItem('Contact', Icons.email_outlined, context),
           const Spacer(),
           Padding(
             padding: const EdgeInsets.all(24),
@@ -42,7 +41,7 @@ class MobileDrawer extends StatelessWidget {
               '© ${AppInfo.copyrightYear} ${AppInfo.fullName}',
               style: GoogleFonts.inter(
                 fontSize: 11,
-                color: AppColors.textTertiary,
+                color: context.colors.textTertiary,
               ),
             ),
           ),
@@ -51,16 +50,16 @@ class MobileDrawer extends StatelessWidget {
     );
   }
 
-  Widget _drawerItem(String title, IconData icon) {
+  Widget _drawerItem(String title, IconData icon, BuildContext context) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      leading: Icon(icon, color: AppColors.textSecondary, size: 20),
+      leading: Icon(icon, color: context.colors.textSecondary, size: 20),
       title: Text(
         title,
         style: GoogleFonts.inter(
           fontSize: 16,
           fontWeight: FontWeight.w500,
-          color: AppColors.textPrimary,
+          color: context.colors.textPrimary,
         ),
       ),
       onTap: () => onNavTap(title),

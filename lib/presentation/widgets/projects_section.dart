@@ -1,8 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:about/core/constants/info.dart';
 import 'package:about/core/constants/projects.dart';
 import 'package:about/core/dimensions.dart';
@@ -12,6 +7,11 @@ import 'package:about/presentation/blocs/hover/hover_cubit.dart';
 import 'package:about/presentation/blocs/projects/projects_bloc.dart';
 import 'package:about/presentation/blocs/projects/projects_event.dart';
 import 'package:about/presentation/blocs/projects/projects_state.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProjectsSection extends StatelessWidget {
@@ -34,7 +34,8 @@ class ProjectsSection extends StatelessWidget {
       child: Container(
         width: double.infinity,
         constraints: const BoxConstraints(maxWidth: Dimensions.maxWidth),
-        padding: EdgeInsets.symmetric(horizontal: isMobile ? width * 0.05 : Dimensions.spaceXXL),
+        padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? width * 0.05 : Dimensions.spaceXXL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -45,7 +46,7 @@ class ProjectsSection extends StatelessWidget {
               style: GoogleFonts.inter(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: context.colors.textPrimary,
               ),
             ),
             const SizedBox(height: 8),
@@ -56,7 +57,7 @@ class ProjectsSection extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.inter(
-                color: AppColors.textSecondary,
+                color: context.colors.textSecondary,
                 fontSize: isMobile ? 12 : 13,
               ),
             ),
@@ -65,10 +66,11 @@ class ProjectsSection extends StatelessWidget {
               BlocBuilder<ProjectsBloc, ProjectsState>(
                 builder: (context, state) {
                   if (state is ProjectsLoading) {
-                    return const Center(
+                    return Center(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 40),
-                        child: CircularProgressIndicator(color: AppColors.primary),
+                        padding: const EdgeInsets.symmetric(vertical: 40),
+                        child: CircularProgressIndicator(
+                            color: context.colors.primary),
                       ),
                     );
                   } else if (state is ProjectsError) {
@@ -77,12 +79,13 @@ class ProjectsSection extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 40),
                         child: Column(
                           children: [
-                            const Icon(Icons.error_outline, color: Colors.orange, size: 48),
+                            const Icon(Icons.error_outline,
+                                color: Colors.orange, size: 48),
                             const SizedBox(height: 16),
                             Text(
                               'GitHub Projects temporarily unavailable',
                               style: GoogleFonts.inter(
-                                color: AppColors.textPrimary,
+                                color: context.colors.textPrimary,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -90,7 +93,8 @@ class ProjectsSection extends StatelessWidget {
                             const SizedBox(height: 8),
                             Text(
                               "I'm having trouble fetching my latest projects from GitHub right now.",
-                              style: GoogleFonts.inter(color: AppColors.textSecondary),
+                              style: GoogleFonts.inter(
+                                  color: context.colors.textSecondary),
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 24),
@@ -103,23 +107,28 @@ class ProjectsSection extends StatelessWidget {
                                   onPressed: () async {
                                     final uri = Uri.parse(AppInfo.githubUrl);
                                     if (await canLaunchUrl(uri)) {
-                                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                      await launchUrl(uri,
+                                          mode: LaunchMode.externalApplication);
                                     }
                                   },
                                   icon: const Icon(Icons.open_in_new),
                                   label: const Text('View on GitHub'),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.primary,
+                                    backgroundColor: context.colors.primary,
                                     foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 24, vertical: 12),
                                   ),
                                 ),
                                 OutlinedButton.icon(
-                                  onPressed: () => context.read<ProjectsBloc>().add(FetchProjects()),
+                                  onPressed: () => context
+                                      .read<ProjectsBloc>()
+                                      .add(FetchProjects()),
                                   icon: const Icon(Icons.refresh),
                                   label: const Text('Retry'),
                                   style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 24, vertical: 12),
                                   ),
                                 ),
                               ],
@@ -155,8 +164,12 @@ class ProjectsSection extends StatelessWidget {
                                     ),
                                   )
                                       .animate()
-                                      .fadeIn(duration: 600.ms, delay: (index * 150).ms)
-                                      .slideY(begin: 0.1, curve: Curves.easeOutQuad);
+                                      .fadeIn(
+                                          duration: 600.ms,
+                                          delay: (index * 150).ms)
+                                      .slideY(
+                                          begin: 0.1,
+                                          curve: Curves.easeOutQuad);
                                 }).toList(),
                               )
                             else
@@ -178,8 +191,12 @@ class ProjectsSection extends StatelessWidget {
                                     ),
                                   )
                                       .animate()
-                                      .fadeIn(duration: 600.ms, delay: (index * 150).ms)
-                                      .slideY(begin: 0.1, curve: Curves.easeOutQuad);
+                                      .fadeIn(
+                                          duration: 600.ms,
+                                          delay: (index * 150).ms)
+                                      .slideY(
+                                          begin: 0.1,
+                                          curve: Curves.easeOutQuad);
                                 }).toList(),
                               ),
                             const SizedBox(height: 48),
@@ -188,7 +205,8 @@ class ProjectsSection extends StatelessWidget {
                                 children: [
                                   ElevatedButton.icon(
                                     onPressed: () => context.push('/projects'),
-                                    icon: const Icon(Icons.grid_view_rounded, size: 18),
+                                    icon: const Icon(Icons.grid_view_rounded,
+                                        size: 18),
                                     label: Text(
                                       'View More Projects',
                                       style: GoogleFonts.inter(
@@ -197,9 +215,10 @@ class ProjectsSection extends StatelessWidget {
                                       ),
                                     ),
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.primary,
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 22),
+                                      backgroundColor: context.colors.primary,
+                                      foregroundColor: context.colors.surface,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 40, vertical: 22),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
@@ -211,14 +230,17 @@ class ProjectsSection extends StatelessWidget {
                                     onPressed: () async {
                                       final uri = Uri.parse(AppInfo.githubUrl);
                                       if (await canLaunchUrl(uri)) {
-                                        await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                        await launchUrl(uri,
+                                            mode:
+                                                LaunchMode.externalApplication);
                                       }
                                     },
-                                    icon: const Icon(Icons.open_in_new, size: 14),
+                                    icon:
+                                        const Icon(Icons.open_in_new, size: 14),
                                     label: Text(
                                       'Open GitHub Profile',
                                       style: GoogleFonts.inter(
-                                        color: AppColors.textSecondary,
+                                        color: context.colors.textSecondary,
                                         fontSize: 13,
                                         decoration: TextDecoration.underline,
                                       ),
@@ -289,9 +311,10 @@ class ProjectsSection extends StatelessWidget {
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 22),
+                            backgroundColor: context.colors.primary,
+                            foregroundColor: context.colors.surface,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 22),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -365,15 +388,19 @@ class _HoverProjectCard extends StatelessWidget {
               duration: const Duration(milliseconds: 200),
               padding: EdgeInsets.all(isMobile ? 24 : 32),
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: context.colors.surface,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: isHovered ? AppColors.primary : AppColors.surface,
+                  color: isHovered
+                      ? context.colors.primary
+                      : context.colors.surface,
                   width: 2,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: isHovered ? AppColors.shadowStrong : AppColors.shadow,
+                    color: isHovered
+                        ? context.colors.shadowStrong
+                        : context.colors.shadow,
                     blurRadius: isHovered ? 40 : 30,
                     offset: Offset(0, isHovered ? 15 : 10),
                   ),
@@ -388,12 +415,12 @@ class _HoverProjectCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: AppColors.fieldBackground,
+                          color: context.colors.fieldBackground,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
                           icon,
-                          color: AppColors.textPrimary,
+                          color: context.colors.textPrimary,
                           size: isMobile ? 20 : 24,
                         ),
                       ),
@@ -402,7 +429,9 @@ class _HoverProjectCard extends StatelessWidget {
                         turns: isHovered ? 0.125 : 0,
                         child: Icon(
                           Icons.open_in_new,
-                          color: isHovered ? AppColors.primary : AppColors.textTertiary,
+                          color: isHovered
+                              ? context.colors.primary
+                              : context.colors.textTertiary,
                           size: 20,
                         ),
                       ),
@@ -416,7 +445,7 @@ class _HoverProjectCard extends StatelessWidget {
                     style: GoogleFonts.inter(
                       fontSize: isMobile ? 18 : 20,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
+                      color: context.colors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -425,13 +454,13 @@ class _HoverProjectCard extends StatelessWidget {
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.inter(
-                      color: AppColors.textSecondary,
+                      color: context.colors.textSecondary,
                       fontSize: isMobile ? 14 : 15,
                       height: 1.5,
                     ),
                   ),
                   const SizedBox(height: 24),
-                  const Divider(color: AppColors.borderLight),
+                  Divider(color: context.colors.borderLight),
                   const SizedBox(height: 20),
                   Wrap(
                     spacing: 8,
@@ -444,8 +473,8 @@ class _HoverProjectCard extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.tagBackground,
-                              border: Border.all(color: AppColors.border),
+                              color: context.colors.tagBackground,
+                              border: Border.all(color: context.colors.border),
                               borderRadius: BorderRadius.circular(100),
                             ),
                             child: Text(
@@ -453,7 +482,7 @@ class _HoverProjectCard extends StatelessWidget {
                               style: GoogleFonts.inter(
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.textTertiary,
+                                color: context.colors.textTertiary,
                               ),
                             ),
                           ),

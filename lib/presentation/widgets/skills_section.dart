@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:about/core/dimensions.dart';
 import 'package:about/core/responsive.dart';
 import 'package:about/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SkillsSection extends StatelessWidget {
   const SkillsSection({super.key});
@@ -17,7 +17,8 @@ class SkillsSection extends StatelessWidget {
       child: Container(
         width: double.infinity,
         constraints: const BoxConstraints(maxWidth: Dimensions.maxWidth),
-        padding: EdgeInsets.symmetric(horizontal: isMobile ? width * 0.05 : Dimensions.spaceXXL),
+        padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? width * 0.05 : Dimensions.spaceXXL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -28,7 +29,7 @@ class SkillsSection extends StatelessWidget {
               style: GoogleFonts.inter(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: context.colors.textPrimary,
               ),
             ),
             const SizedBox(height: 8),
@@ -37,7 +38,7 @@ class SkillsSection extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: AppColors.textSecondary,
+                color: context.colors.textSecondary,
                 fontSize: isMobile ? 12 : 13,
               ),
             ),
@@ -190,7 +191,7 @@ class SkillsSection extends StatelessWidget {
           style: TextStyle(
             fontSize: isMobile ? 10 : 11,
             fontWeight: FontWeight.bold,
-            color: AppColors.textTertiary,
+            color: context.colors.textTertiary,
             letterSpacing: 1.5,
           ),
         ),
@@ -206,8 +207,8 @@ class SkillsSection extends StatelessWidget {
                     vertical: isMobile ? 8 : 10,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.fieldBackground,
-                    border: Border.all(color: AppColors.border),
+                    color: context.colors.fieldBackground,
+                    border: Border.all(color: context.colors.border),
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Text(
@@ -215,7 +216,7 @@ class SkillsSection extends StatelessWidget {
                     style: TextStyle(
                       fontSize: isMobile ? 12 : 13,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimary,
+                      color: context.colors.textPrimary,
                     ),
                   ),
                 ),

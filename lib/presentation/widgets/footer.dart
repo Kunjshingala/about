@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:about/core/constants/assets.dart';
 import 'package:about/core/constants/info.dart';
 import 'package:about/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Footer extends StatelessWidget {
@@ -14,7 +14,7 @@ class Footer extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 60),
       child: Column(
         children: [
-          const Divider(color: AppColors.borderLight),
+          Divider(color: context.colors.borderLight),
           const SizedBox(height: 60),
           Image.asset(Assets.logo192, height: 32, fit: BoxFit.contain),
           const SizedBox(height: 16),
@@ -22,7 +22,7 @@ class Footer extends StatelessWidget {
             '© ${AppInfo.copyrightYear} ${AppInfo.fullName}. Built with Flutter.',
             style: GoogleFonts.inter(
               fontSize: 13,
-              color: AppColors.textTertiary,
+              color: context.colors.textTertiary,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -34,14 +34,16 @@ class Footer extends StatelessWidget {
             runSpacing: 8,
             children: [
               if (AppInfo.showGithub) ...[
-                _footerLink('GitHub', AppInfo.githubUrl),
-                if (AppInfo.showLinkedIn || AppInfo.showTwitter) _divider(),
+                _footerLink('GitHub', AppInfo.githubUrl, context),
+                if (AppInfo.showLinkedIn || AppInfo.showTwitter)
+                  _divider(context),
               ],
               if (AppInfo.showLinkedIn) ...[
-                _footerLink('LinkedIn', AppInfo.linkedinUrl),
-                if (AppInfo.showTwitter) _divider(),
+                _footerLink('LinkedIn', AppInfo.linkedinUrl, context),
+                if (AppInfo.showTwitter) _divider(context),
               ],
-              if (AppInfo.showTwitter) _footerLink('Twitter', AppInfo.twitterUrl),
+              if (AppInfo.showTwitter)
+                _footerLink('Twitter', AppInfo.twitterUrl, context),
             ],
           ),
         ],
@@ -49,7 +51,7 @@ class Footer extends StatelessWidget {
     );
   }
 
-  Widget _footerLink(String title, String url) {
+  Widget _footerLink(String title, String url, BuildContext context) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -64,20 +66,20 @@ class Footer extends StatelessWidget {
           style: GoogleFonts.inter(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: AppColors.textSecondary,
+            color: context.colors.textSecondary,
           ),
         ),
       ),
     );
   }
 
-  Widget _divider() {
+  Widget _divider(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
       width: 4,
       height: 4,
-      decoration: const BoxDecoration(
-        color: AppColors.border,
+      decoration: BoxDecoration(
+        color: context.colors.border,
         shape: BoxShape.circle,
       ),
     );

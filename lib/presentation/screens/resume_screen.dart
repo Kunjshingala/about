@@ -1,7 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:about/core/constants/info.dart';
 import 'package:about/core/theme/app_colors.dart';
 import 'package:about/presentation/blocs/resume/resume_bloc.dart';
@@ -15,6 +11,9 @@ import 'package:about/presentation/widgets/projects_section.dart';
 import 'package:about/presentation/widgets/skills_section.dart';
 import 'package:about/presentation/widgets/stats_section.dart';
 import 'package:about/presentation/widgets/testimonials_section.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ResumeScreen extends StatefulWidget {
   const ResumeScreen({super.key});
@@ -91,7 +90,9 @@ class _ResumeScreenState extends State<ResumeScreen> {
   void _onScroll() {
     final shouldShowLogo = _scrollController.offset <= 50;
     if (shouldShowLogo != context.read<ResumeBloc>().state.showLogo) {
-      context.read<ResumeBloc>().add(LogoVisibilityChanged(showLogo: shouldShowLogo));
+      context
+          .read<ResumeBloc>()
+          .add(LogoVisibilityChanged(showLogo: shouldShowLogo));
     }
   }
 
@@ -107,7 +108,7 @@ class _ResumeScreenState extends State<ResumeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colors.background,
       endDrawer: MobileDrawer(onNavTap: _onNavTap),
       body: Stack(
         children: [
@@ -139,7 +140,8 @@ class _ResumeScreenState extends State<ResumeScreen> {
             left: 0,
             right: 0,
             child: BlocBuilder<ResumeBloc, ResumeState>(
-              buildWhen: (previous, current) => previous.showLogo != current.showLogo,
+              buildWhen: (previous, current) =>
+                  previous.showLogo != current.showLogo,
               builder: (context, state) {
                 return GlassNavbar(
                   showLogo: state.showLogo,
