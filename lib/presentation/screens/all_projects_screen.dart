@@ -69,7 +69,7 @@ class _AllProjectsScreenState extends State<AllProjectsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Complete Portfolio',
+                          'All Projects',
                           style: GoogleFonts.inter(
                             fontSize: isMobile ? 24 : 32,
                             fontWeight: FontWeight.bold,

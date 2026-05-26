@@ -129,8 +129,10 @@ class _ResumeScreenState extends State<ResumeScreen> {
                   const SizedBox(height: 120),
                   TestimonialsSection(key: _testimonialsKey),
                 ],
-                const SizedBox(height: 120),
-                ContactSection(key: _contactKey),
+                if (AppInfo.showContact) ...[
+                  const SizedBox(height: 120),
+                  ContactSection(key: _contactKey),
+                ],
                 const Footer(),
               ],
             ),

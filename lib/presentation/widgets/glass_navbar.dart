@@ -79,8 +79,10 @@ class GlassNavbar extends StatelessWidget {
                     const SizedBox(width: 24),
                     _navItem('Projects', context),
                     const SizedBox(width: 24),
-                    _navItem('Contact', context),
-                    const SizedBox(width: 24),
+                    if (AppInfo.showContact) ...[
+                      _navItem('Contact', context),
+                      const SizedBox(width: 24),
+                    ],
                     const ThemeToggleButton(),
                   ],
                 )

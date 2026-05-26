@@ -33,7 +33,8 @@ class MobileDrawer extends StatelessWidget {
           _drawerItem('Stats', Icons.bar_chart, context),
           _drawerItem('Experience', Icons.work_outline, context),
           _drawerItem('Projects', Icons.code, context),
-          _drawerItem('Contact', Icons.email_outlined, context),
+          if (AppInfo.showContact)
+            _drawerItem('Contact', Icons.email_outlined, context),
           const Spacer(),
           Padding(
             padding: const EdgeInsets.all(24),

@@ -14,7 +14,7 @@ class AppInfo {
       'I build mobile apps that actually ship.\n\n'
       'Over the past two years at an agency, I\'ve worked on 40+ production apps across delivery, '
       'transport, healthcare, and home services. Most projects have tight deadlines and zero room '
-      'for over-engineering — which taught me to write code that\'s clean enough to maintain, '
+      'for over-engineering - which taught me to write code that\'s clean enough to maintain, '
       'modular enough to reuse, and simple enough to hand off.\n\n'
       'I got into Flutter because I wanted to solve real problems without rebuilding everything twice. '
       'Now I\'m the person my team calls when something needs to work across Android, iOS, and '
@@ -38,6 +38,7 @@ class AppInfo {
 
   // Section Visibility Flags
   static const bool showTestimonials = false;
+  static const bool showContact = false;
 
   // Year for copyright
   static const String copyrightYear = '2026';
