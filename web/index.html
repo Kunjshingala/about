@@ -35,34 +35,130 @@
   <link rel="manifest" href="manifest.json">
   <style>
     body {
-      background-color: #121212;
+      background-color: #0a0a0a;
       margin: 0;
+      overflow: hidden;
     }
+
     .loading-container {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #0a0a0a;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.8s ease-in-out;
     }
-    .loader {
-      border: 4px solid #333;
+
+    .loading-container.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .logo-image {
+      width: 120px;
+      height: auto;
+      margin-bottom: 24px;
+      animation: pulse 1.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { 
+        transform: scale(0.95); 
+        opacity: 0.8; 
+        filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+      }
+      100% { 
+        transform: scale(1.05); 
+        opacity: 1; 
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2)); 
+      }
+    }
+
+    .loading-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      background-color: #ffffff;
       border-radius: 50%;
-      border-top: 4px solid #fff;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
+      opacity: 0.7;
+      animation: bounce 1.4s infinite ease-in-out both;
     }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+
+    .dot:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+
+    .dot:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0);
+        opacity: 0.3;
+      }
+
+      40% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      }
     }
   </style>
 </head>
 
 <body>
   <div class="loading-container">
-    <div class="loader"></div>
+    <img src="icons/Icon-192.png" alt="09 Logo" class="logo-image" />
+    <div class="loading-dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
   </div>
+
+  <script>
+    // Watch for Flutter's glass-pane (canvas container) to be added to the DOM
+    window.addEventListener('load', function () {
+      var loadingContainer = document.querySelector('.loading-container');
+      var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+          if (mutation.addedNodes) {
+            for (var i = 0; i < mutation.addedNodes.length; i++) {
+              var node = mutation.addedNodes[i];
+              // Flutter web wraps its canvas in a flutter-view or flt-glass-pane element
+              if (node.tagName === 'FLT-GLASS-PANE' || node.tagName === 'FLUTTER-VIEW') {
+                // Slight delay to ensure Flutter has painted its first frame
+                setTimeout(function () {
+                  loadingContainer.classList.add('fade-out');
+                  setTimeout(function () {
+                    loadingContainer.remove();
+                  }, 800); // Wait for transition to finish before removing from DOM
+                }, 100);
+                observer.disconnect();
+                return;
+              }
+            }
+          }
+        });
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    });
+  </script>
+
   <script src="flutter_bootstrap.js" async></script>
 </body>
 
