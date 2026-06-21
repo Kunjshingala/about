@@ -1,11 +1,13 @@
 import 'package:about/core/constants/info.dart';
 import 'package:about/core/dimensions.dart';
+import 'package:about/core/enums/section.dart';
 import 'package:about/core/responsive.dart';
 import 'package:about/core/theme/app_colors.dart';
+import 'package:about/presentation/widgets/hover_wrapper.dart';
+import 'package:about/presentation/widgets/theme_toggle_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'package:about/presentation/widgets/theme_toggle_button.dart';
+import 'package:url_launcher/link.dart';
 
 class GlassNavbar extends StatelessWidget {
   const GlassNavbar({
@@ -16,13 +18,15 @@ class GlassNavbar extends StatelessWidget {
     this.showBackButton = false,
     this.onBackTap,
     this.showNavItems = true,
+    this.activeSection = Section.about,
   });
-  final void Function(String)? onNavTap;
+  final void Function(Section)? onNavTap;
   final VoidCallback? onMenuTap;
   final bool showLogo;
   final bool showBackButton;
   final VoidCallback? onBackTap;
   final bool showNavItems;
+  final Section activeSection;
 
   @override
   Widget build(BuildContext context) {
@@ -54,33 +58,43 @@ class GlassNavbar extends StatelessWidget {
                         onPressed: onBackTap,
                       ),
                     ),
-                  GestureDetector(
-                    onTap: () => onNavTap?.call('About'),
-                    child: Text(
-                      AppInfo.fullName,
-                      style: GoogleFonts.inter(
-                        fontSize: isMobile ? 12 : 14,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: -0.5,
-                        color: context.colors.textPrimary,
-                      ),
-                    ),
+                  HoverWrapper(
+                    builder: (context, isHovered) {
+                      return Link(
+                        uri: Uri.parse('/'),
+                        builder: (context, followLink) => GestureDetector(
+                          onTap: () => onNavTap?.call(Section.about),
+                          child: AnimatedDefaultTextStyle(
+                            duration: const Duration(milliseconds: 200),
+                            style: GoogleFonts.inter(
+                              fontSize: isMobile ? 12 : 14,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: -0.5,
+                              color: isHovered
+                                  ? context.colors.primary
+                                  : context.colors.textPrimary,
+                            ),
+                            child: const Text(AppInfo.fullName),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
               if (!isMobile && showNavItems)
                 Row(
                   children: [
-                    _navItem('About', context),
+                    _navItem(Section.about, context),
                     const SizedBox(width: 24),
-                    _navItem('Stats', context),
+                    _navItem(Section.stats, context),
                     const SizedBox(width: 24),
-                    _navItem('Experience', context),
+                    _navItem(Section.experience, context),
                     const SizedBox(width: 24),
-                    _navItem('Projects', context),
+                    _navItem(Section.projects, context),
                     const SizedBox(width: 24),
                     if (AppInfo.showContact) ...[
-                      _navItem('Contact', context),
+                      _navItem(Section.contact, context),
                       const SizedBox(width: 24),
                     ],
                     const ThemeToggleButton(),
@@ -105,20 +119,44 @@ class GlassNavbar extends StatelessWidget {
     );
   }
 
-  Widget _navItem(String title, BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () => onNavTap?.call(title),
-        child: Text(
-          title,
-          style: GoogleFonts.inter(
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: context.colors.textSecondary,
+  Widget _navItem(Section section, BuildContext context) {
+    final isActive = activeSection == section;
+    return HoverWrapper(
+      builder: (context, isHovered) {
+        return Link(
+          uri: Uri.parse('/#${section.name}'),
+          builder: (context, followLink) => GestureDetector(
+            onTap: () => onNavTap?.call(section),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 200),
+                  style: GoogleFonts.inter(
+                    fontSize: 13,
+                    fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
+                    color: isActive || isHovered
+                        ? context.colors.primary
+                        : context.colors.textSecondary,
+                  ),
+                  child: Text(section.title),
+                ),
+                const SizedBox(height: 4),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOutCubic,
+                  height: 2,
+                  width: isActive ? 20 : 0,
+                  decoration: BoxDecoration(
+                    color: context.colors.primary,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

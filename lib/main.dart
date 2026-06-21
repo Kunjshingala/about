@@ -30,7 +30,9 @@ class MyApp extends StatelessWidget {
                   GitHubService(username: AppInfo.githubUrl.split('/').last),
             );
             if (ProjectConstants.isGitHubDynamic) {
-              bloc.add(FetchProjects());
+              Future.delayed(const Duration(milliseconds: 500), () {
+                bloc.add(FetchProjects());
+              });
             }
             return bloc;
           },

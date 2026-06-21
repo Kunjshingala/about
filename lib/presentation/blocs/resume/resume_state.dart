@@ -1,16 +1,17 @@
+
 part of 'resume_bloc.dart';
 
 class ResumeState extends Equatable {
   const ResumeState({
-    this.activeSection = 'Home',
+    this.activeSection = Section.about,
     this.showLogo = true,
   });
 
-  final String activeSection;
+  final Section activeSection;
   final bool showLogo;
 
   ResumeState copyWith({
-    String? activeSection,
+    Section? activeSection,
     bool? showLogo,
   }) {
     return ResumeState(

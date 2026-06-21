@@ -1,12 +1,12 @@
-import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/material.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:about/core/models/project.dart';
 import 'package:about/core/services/github_service.dart';
 import 'package:about/presentation/blocs/projects/projects_bloc.dart';
 import 'package:about/presentation/blocs/projects/projects_event.dart';
 import 'package:about/presentation/blocs/projects/projects_state.dart';
+import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
 class MockGitHubService extends Mock implements GitHubService {}
 

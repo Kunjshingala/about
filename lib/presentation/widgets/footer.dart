@@ -1,10 +1,11 @@
 import 'dart:async';
+
 import 'package:about/core/constants/assets.dart';
 import 'package:about/core/constants/info.dart';
 import 'package:about/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/link.dart';
 
 class Footer extends StatefulWidget {
   const Footer({super.key});
@@ -198,19 +199,18 @@ class _FooterState extends State<Footer> {
   Widget _footerLink(String title, String url, BuildContext context) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () async {
-          final uri = Uri.parse(url);
-          if (await canLaunchUrl(uri)) {
-            await launchUrl(uri, mode: LaunchMode.externalApplication);
-          }
-        },
-        child: Text(
-          title,
-          style: GoogleFonts.inter(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: context.colors.textSecondary,
+      child: Link(
+        uri: Uri.parse(url),
+        target: LinkTarget.blank,
+        builder: (context, followLink) => GestureDetector(
+          onTap: followLink,
+          child: Text(
+            title,
+            style: GoogleFonts.inter(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: context.colors.textSecondary,
+            ),
           ),
         ),
       ),
@@ -230,7 +230,7 @@ class _FooterState extends State<Footer> {
   }
 
   void _showWhyFlutterDialog(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: context.colors.surface,
@@ -250,16 +250,7 @@ class _FooterState extends State<Footer> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "This portfolio is built with Flutter Web - not because it's the easiest choice, but because it's the best way to learn.\n\n"
-                  "I wanted hands-on experience with Flutter's web target beyond just reading docs. This page gave me a sandbox to experiment. I learned how responsive design works across desktop browsers, why some animations stutter on web but not mobile, and how to optimize bundle size when you can't just tell users to \"download the app.\"\n\n"
-                  "Building this forced me to deal with:\n"
-                  "• Responsive design across desktop breakpoints\n"
-                  "• Browser-specific rendering differences\n"
-                  "• Bundle size optimization for web\n"
-                  "• Routing and deep linking in a web context\n"
-                  "• Performance differences between mobile and browser runtimes\n\n"
-                  "It's also proof that I don't just build for Android and iOS. If I'm claiming cross-platform expertise, this page is evidence I've shipped Flutter on the web, not just talked about it.\n\n"
-                  "Could I have built this faster with HTML? Absolutely. But I wouldn't have learned nearly as much.",
+                  AppInfo.whyFlutterText,
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     height: 1.6,

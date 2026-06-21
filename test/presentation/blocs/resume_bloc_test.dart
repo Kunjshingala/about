@@ -1,6 +1,7 @@
+import 'package:about/core/enums/section.dart';
+import 'package:about/presentation/blocs/resume/resume_bloc.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:about/presentation/blocs/resume/resume_bloc.dart';
 
 void main() {
   group('ResumeBloc', () {
@@ -14,25 +15,25 @@ void main() {
       resumeBloc.close();
     });
 
-    test('initial state is ResumeState(activeSection: "Home")', () {
-      expect(resumeBloc.state, const ResumeState(activeSection: 'Home'));
+    test('initial state is ResumeState(activeSection: Section.about)', () {
+      expect(resumeBloc.state, const ResumeState(activeSection: Section.about));
     });
 
     blocTest<ResumeBloc, ResumeState>(
-      'emits [ResumeState(activeSection: "About")] when SectionChanged("About") is added',
+      'emits [ResumeState(activeSection: Section.about)] when SectionChanged(Section.about) is added',
       build: () => resumeBloc,
-      act: (bloc) => bloc.add(const SectionChanged('About')),
+      act: (bloc) => bloc.add(const SectionChanged(Section.about)),
       expect: () => [
-        const ResumeState(activeSection: 'About'),
+        const ResumeState(activeSection: Section.about),
       ],
     );
 
     blocTest<ResumeBloc, ResumeState>(
-      'emits [ResumeState(activeSection: "Projects")] when SectionChanged("Projects") is added',
+      'emits [ResumeState(activeSection: Section.projects)] when SectionChanged(Section.projects) is added',
       build: () => resumeBloc,
-      act: (bloc) => bloc.add(const SectionChanged('Projects')),
+      act: (bloc) => bloc.add(const SectionChanged(Section.projects)),
       expect: () => [
-        const ResumeState(activeSection: 'Projects'),
+        const ResumeState(activeSection: Section.projects),
       ],
     );
   });

@@ -2,13 +2,12 @@ import 'package:about/core/constants/info.dart';
 import 'package:about/core/dimensions.dart';
 import 'package:about/core/responsive.dart';
 import 'package:about/core/theme/app_colors.dart';
-import 'package:about/presentation/blocs/hover/hover_cubit.dart';
+import 'package:about/presentation/widgets/hover_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/link.dart';
 
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
@@ -151,17 +150,11 @@ class HeroSection extends StatelessWidget {
     String url, {
     required BuildContext context,
   }) {
-    return BlocProvider(
-      create: (context) => HoverCubit(),
-      child: _HoverCTAButton(title: title, isPrimary: isPrimary, url: url),
-    );
+    return _HoverCTAButton(title: title, isPrimary: isPrimary, url: url);
   }
 
-  Widget _socialIcon(dynamic icon, String url) {
-    return BlocProvider(
-      create: (context) => HoverCubit(),
-      child: _HoverSocialIcon(icon: icon, url: url),
-    );
+  Widget _socialIcon(FaIconData icon, String url) {
+    return _HoverSocialIcon(icon: icon, url: url);
   }
 }
 
@@ -179,20 +172,14 @@ class _HoverCTAButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMobile = Responsive.isMobile(context);
 
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => context.read<HoverCubit>().setHovered(true),
-      onExit: (_) => context.read<HoverCubit>().setHovered(false),
-      child: GestureDetector(
-        onTap: () async {
-          final uri = Uri.parse(url);
-          if (await canLaunchUrl(uri)) {
-            await launchUrl(uri, mode: LaunchMode.externalApplication);
-          }
-        },
-        child: BlocBuilder<HoverCubit, bool>(
-          builder: (context, isHovered) {
-            return AnimatedContainer(
+    return HoverWrapper(
+      builder: (context, isHovered) {
+        return Link(
+          uri: Uri.parse(url),
+          target: LinkTarget.blank,
+          builder: (context, followLink) => GestureDetector(
+            onTap: followLink,
+            child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               padding: EdgeInsets.symmetric(
                 horizontal: isMobile ? Dimensions.spaceL : Dimensions.spaceXL,
@@ -232,35 +219,29 @@ class _HoverCTAButton extends StatelessWidget {
                       : context.colors.textPrimary,
                 ),
               ),
-            );
-          },
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
 
 class _HoverSocialIcon extends StatelessWidget {
   const _HoverSocialIcon({required this.icon, required this.url});
-  final dynamic icon;
+  final FaIconData icon;
   final String url;
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => context.read<HoverCubit>().setHovered(true),
-      onExit: (_) => context.read<HoverCubit>().setHovered(false),
-      child: GestureDetector(
-        onTap: () async {
-          final uri = Uri.parse(url);
-          if (await canLaunchUrl(uri)) {
-            await launchUrl(uri, mode: LaunchMode.externalApplication);
-          }
-        },
-        child: BlocBuilder<HoverCubit, bool>(
-          builder: (context, isHovered) {
-            return AnimatedContainer(
+    return HoverWrapper(
+      builder: (context, isHovered) {
+        return Link(
+          uri: Uri.parse(url),
+          target: LinkTarget.blank,
+          builder: (context, followLink) => GestureDetector(
+            onTap: followLink,
+            child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               transform: Matrix4.diagonal3Values(
                 isHovered ? 1.2 : 1.0,
@@ -274,10 +255,10 @@ class _HoverSocialIcon extends StatelessWidget {
                     : context.colors.textTertiary,
                 size: Dimensions.iconM,
               ),
-            );
-          },
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
