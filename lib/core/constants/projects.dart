@@ -21,10 +21,6 @@ class ProjectConstants {
     // Add more repository names here to hide them
   ];
 
-  // Project URLs
-  static const String bmiCalculatorUrl = 'https://github.com/Kunjshingala/BMI-Calculator';
-  static const String weatherAppUrl = 'https://github.com/Kunjshingala/Clima';
-
   /// Manual projects that you want to highlight or that are not on GitHub.
   /// These will be merged with your GitHub projects when dynamic loading is enabled.
   static final List<Project> manualProjects = [

@@ -1,11 +1,14 @@
 import 'package:about/core/constants/info.dart';
+import 'package:about/core/enums/section.dart';
 import 'package:about/core/theme/app_colors.dart';
+import 'package:about/presentation/blocs/resume/resume_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MobileDrawer extends StatelessWidget {
   const MobileDrawer({super.key, required this.onNavTap});
-  final void Function(String) onNavTap;
+  final void Function(Section) onNavTap;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +32,23 @@ class MobileDrawer extends StatelessWidget {
           ),
           const SizedBox(height: 40),
           Divider(color: context.colors.borderLight),
-          _drawerItem('About', Icons.person_outline, context),
-          _drawerItem('Stats', Icons.bar_chart, context),
-          _drawerItem('Experience', Icons.work_outline, context),
-          _drawerItem('Projects', Icons.code, context),
-          if (AppInfo.showContact)
-            _drawerItem('Contact', Icons.email_outlined, context),
+          BlocBuilder<ResumeBloc, ResumeState>(
+            builder: (context, state) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _drawerItem(Section.about, state.activeSection == Section.about, context),
+                  _drawerItem(Section.stats, state.activeSection == Section.stats, context),
+                  _drawerItem(Section.experience, state.activeSection == Section.experience, context),
+                  _drawerItem(Section.projects, state.activeSection == Section.projects, context),
+                  if (AppInfo.showTestimonials)
+                    _drawerItem(Section.testimonials, state.activeSection == Section.testimonials, context),
+                  if (AppInfo.showContact)
+                    _drawerItem(Section.contact, state.activeSection == Section.contact, context),
+                ],
+              );
+            },
+          ),
           const Spacer(),
           Padding(
             padding: const EdgeInsets.all(24),
@@ -51,19 +65,30 @@ class MobileDrawer extends StatelessWidget {
     );
   }
 
-  Widget _drawerItem(String title, IconData icon, BuildContext context) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      leading: Icon(icon, color: context.colors.textSecondary, size: 20),
-      title: Text(
-        title,
-        style: GoogleFonts.inter(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: context.colors.textPrimary,
+  Widget _drawerItem(Section section, bool isActive, BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: isActive ? context.colors.primary.withValues(alpha: 0.1) : Colors.transparent,
+        border: Border(
+          left: BorderSide(
+            color: isActive ? context.colors.primary : Colors.transparent,
+            width: 4,
+          ),
         ),
       ),
-      onTap: () => onNavTap(title),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        leading: Icon(section.icon, color: isActive ? context.colors.primary : context.colors.textSecondary, size: 20),
+        title: Text(
+          section.title,
+          style: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
+            color: isActive ? context.colors.primary : context.colors.textPrimary,
+          ),
+        ),
+        onTap: () => onNavTap(section),
+      ),
     );
   }
 }

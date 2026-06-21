@@ -3,16 +3,16 @@ import 'package:about/core/constants/projects.dart';
 import 'package:about/core/dimensions.dart';
 import 'package:about/core/responsive.dart';
 import 'package:about/core/theme/app_colors.dart';
-import 'package:about/presentation/blocs/hover/hover_cubit.dart';
 import 'package:about/presentation/blocs/projects/projects_bloc.dart';
 import 'package:about/presentation/blocs/projects/projects_event.dart';
 import 'package:about/presentation/blocs/projects/projects_state.dart';
+import 'package:about/presentation/widgets/project_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/link.dart';
 
 class ProjectsSection extends StatelessWidget {
   const ProjectsSection({super.key});
@@ -103,21 +103,20 @@ class ProjectsSection extends StatelessWidget {
                               runSpacing: 16,
                               alignment: WrapAlignment.center,
                               children: [
-                                ElevatedButton.icon(
-                                  onPressed: () async {
-                                    final uri = Uri.parse(AppInfo.githubUrl);
-                                    if (await canLaunchUrl(uri)) {
-                                      await launchUrl(uri,
-                                          mode: LaunchMode.externalApplication);
-                                    }
-                                  },
-                                  icon: const Icon(Icons.open_in_new),
-                                  label: const Text('View on GitHub'),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: context.colors.primary,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 24, vertical: 12),
+                                Link(
+                                  uri: Uri.parse(AppInfo.githubUrl),
+                                  target: LinkTarget.blank,
+                                  builder: (context, followLink) =>
+                                      ElevatedButton.icon(
+                                    onPressed: followLink,
+                                    icon: const Icon(Icons.open_in_new),
+                                    label: const Text('View on GitHub'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: context.colors.primary,
+                                      foregroundColor: Colors.white,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 24, vertical: 12),
+                                    ),
                                   ),
                                 ),
                                 OutlinedButton.icon(
@@ -154,13 +153,12 @@ class ProjectsSection extends StatelessWidget {
                                   final project = entry.value;
                                   return Padding(
                                     padding: const EdgeInsets.only(bottom: 16),
-                                    child: _projectCard(
-                                      project.title,
-                                      project.description,
-                                      project.tags,
-                                      project.icon,
-                                      project.url,
-                                      context,
+                                    child: ProjectCard(
+                                      title: project.title,
+                                      desc: project.description,
+                                      tags: project.tags,
+                                      icon: project.icon,
+                                      url: project.url,
                                     ),
                                   )
                                       .animate()
@@ -173,76 +171,111 @@ class ProjectsSection extends StatelessWidget {
                                 }).toList(),
                               )
                             else
-                              Wrap(
-                                spacing: 24,
-                                runSpacing: 24,
-                                children: projects.asMap().entries.map((entry) {
-                                  final index = entry.key;
-                                  final project = entry.value;
-                                  return SizedBox(
-                                    width: (constraints.maxWidth - 24) / 2,
-                                    child: _projectCard(
-                                      project.title,
-                                      project.description,
-                                      project.tags,
-                                      project.icon,
-                                      project.url,
-                                      context,
+                              Column(
+                                children: [
+                                  for (int i = 0; i < projects.length; i += 2)
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          bottom:
+                                              i + 2 < projects.length ? 24 : 0),
+                                      child: IntrinsicHeight(
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            Expanded(
+                                              child: ProjectCard(
+                                                title: projects[i].title,
+                                                desc: projects[i].description,
+                                                tags: projects[i].tags,
+                                                icon: projects[i].icon,
+                                                url: projects[i].url,
+                                              )
+                                                  .animate()
+                                                  .fadeIn(
+                                                      duration: 600.ms,
+                                                      delay: (i * 150).ms)
+                                                  .slideY(
+                                                      begin: 0.1,
+                                                      curve:
+                                                          Curves.easeOutQuad),
+                                            ),
+                                            const SizedBox(width: 24),
+                                            if (i + 1 < projects.length)
+                                              Expanded(
+                                                child: ProjectCard(
+                                                  title: projects[i + 1].title,
+                                                  desc: projects[i + 1]
+                                                      .description,
+                                                  tags: projects[i + 1].tags,
+                                                  icon: projects[i + 1].icon,
+                                                  url: projects[i + 1].url,
+                                                )
+                                                    .animate()
+                                                    .fadeIn(
+                                                        duration: 600.ms,
+                                                        delay:
+                                                            ((i + 1) * 150).ms)
+                                                    .slideY(
+                                                        begin: 0.1,
+                                                        curve:
+                                                            Curves.easeOutQuad),
+                                              )
+                                            else
+                                              const Expanded(child: SizedBox()),
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                  )
-                                      .animate()
-                                      .fadeIn(
-                                          duration: 600.ms,
-                                          delay: (index * 150).ms)
-                                      .slideY(
-                                          begin: 0.1,
-                                          curve: Curves.easeOutQuad);
-                                }).toList(),
+                                ],
                               ),
                             const SizedBox(height: 48),
                             Center(
                               child: Column(
                                 children: [
-                                  ElevatedButton.icon(
-                                    onPressed: () => context.push('/projects'),
-                                    icon: const Icon(Icons.grid_view_rounded,
-                                        size: 18),
-                                    label: Text(
-                                      'View More Projects',
-                                      style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.w600,
-                                        letterSpacing: 0.5,
+                                  Link(
+                                    uri: Uri.parse('/projects'),
+                                    builder: (context, followLink) =>
+                                        ElevatedButton.icon(
+                                      onPressed: () => context.push('/projects'),
+                                      icon: const Icon(Icons.grid_view_rounded,
+                                          size: 18),
+                                      label: Text(
+                                        'View More Projects',
+                                        style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 0.5,
+                                        ),
                                       ),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: context.colors.primary,
-                                      foregroundColor: context.colors.surface,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 40, vertical: 22),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: context.colors.primary,
+                                        foregroundColor: context.colors.surface,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 40, vertical: 22),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        elevation: 0,
                                       ),
-                                      elevation: 0,
                                     ),
                                   ),
                                   const SizedBox(height: 16),
-                                  TextButton.icon(
-                                    onPressed: () async {
-                                      final uri = Uri.parse(AppInfo.githubUrl);
-                                      if (await canLaunchUrl(uri)) {
-                                        await launchUrl(uri,
-                                            mode:
-                                                LaunchMode.externalApplication);
-                                      }
-                                    },
-                                    icon:
-                                        const Icon(Icons.open_in_new, size: 14),
-                                    label: Text(
-                                      'Open GitHub Profile',
-                                      style: GoogleFonts.inter(
-                                        color: context.colors.textSecondary,
-                                        fontSize: 13,
-                                        decoration: TextDecoration.underline,
+                                  Link(
+                                    uri: Uri.parse(AppInfo.githubUrl),
+                                    target: LinkTarget.blank,
+                                    builder: (context, followLink) =>
+                                        TextButton.icon(
+                                      onPressed: followLink,
+                                      icon: const Icon(Icons.open_in_new,
+                                          size: 14),
+                                      label: Text(
+                                        'Open GitHub Profile',
+                                        style: GoogleFonts.inter(
+                                          color: context.colors.textSecondary,
+                                          fontSize: 13,
+                                          decoration: TextDecoration.underline,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -269,56 +302,80 @@ class ProjectsSection extends StatelessWidget {
                           children: projects
                               .map((project) => Padding(
                                     padding: const EdgeInsets.only(bottom: 16),
-                                    child: _projectCard(
-                                      project.title,
-                                      project.description,
-                                      project.tags,
-                                      project.icon,
-                                      project.url,
-                                      context,
+                                    child: ProjectCard(
+                                      title: project.title,
+                                      desc: project.description,
+                                      tags: project.tags,
+                                      icon: project.icon,
+                                      url: project.url,
                                     ),
                                   ))
                               .toList(),
                         )
                       else
-                        Wrap(
-                          spacing: 24,
-                          runSpacing: 24,
-                          children: projects
-                              .map((project) => SizedBox(
-                                    width: (constraints.maxWidth - 24) / 2,
-                                    child: _projectCard(
-                                      project.title,
-                                      project.description,
-                                      project.tags,
-                                      project.icon,
-                                      project.url,
-                                      context,
-                                    ),
-                                  ))
-                              .toList(),
+                        Column(
+                          children: [
+                            for (int i = 0; i < projects.length; i += 2)
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    bottom: i + 2 < projects.length ? 24 : 0),
+                                child: IntrinsicHeight(
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Expanded(
+                                        child: ProjectCard(
+                                          title: projects[i].title,
+                                          desc: projects[i].description,
+                                          tags: projects[i].tags,
+                                          icon: projects[i].icon,
+                                          url: projects[i].url,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 24),
+                                      if (i + 1 < projects.length)
+                                        Expanded(
+                                          child: ProjectCard(
+                                            title: projects[i + 1].title,
+                                            desc: projects[i + 1].description,
+                                            tags: projects[i + 1].tags,
+                                            icon: projects[i + 1].icon,
+                                            url: projects[i + 1].url,
+                                          ),
+                                        )
+                                      else
+                                        const Expanded(child: SizedBox()),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                       const SizedBox(height: 48),
                       Center(
-                        child: ElevatedButton.icon(
-                          onPressed: () => context.push('/projects'),
-                          icon: const Icon(Icons.grid_view_rounded, size: 18),
-                          label: Text(
-                            'View More Projects',
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.5,
+                        child: Link(
+                          uri: Uri.parse('/projects'),
+                          builder: (context, followLink) => ElevatedButton.icon(
+                            onPressed: () => context.push('/projects'),
+                            icon: const Icon(Icons.grid_view_rounded, size: 18),
+                            label: Text(
+                              'View More Projects',
+                              style: GoogleFonts.inter(
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.5,
+                              ),
                             ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: context.colors.primary,
-                            foregroundColor: context.colors.surface,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 22),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: context.colors.primary,
+                              foregroundColor: context.colors.surface,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 40, vertical: 22),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              elevation: 0,
                             ),
-                            elevation: 0,
                           ),
                         ),
                       ),
@@ -327,172 +384,6 @@ class ProjectsSection extends StatelessWidget {
                 },
               ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _projectCard(
-    String title,
-    String desc,
-    List<String> tags,
-    IconData icon,
-    String url,
-    BuildContext context,
-  ) {
-    return BlocProvider(
-      create: (context) => HoverCubit(),
-      child: _HoverProjectCard(
-        title: title,
-        desc: desc,
-        tags: tags,
-        icon: icon,
-        url: url,
-      ),
-    );
-  }
-}
-
-class _HoverProjectCard extends StatelessWidget {
-  const _HoverProjectCard({
-    required this.title,
-    required this.desc,
-    required this.tags,
-    required this.icon,
-    required this.url,
-  });
-  final String title;
-  final String desc;
-  final List<String> tags;
-  final IconData icon;
-  final String url;
-
-  @override
-  Widget build(BuildContext context) {
-    final isMobile = Responsive.isMobile(context);
-
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => context.read<HoverCubit>().setHovered(true),
-      onExit: (_) => context.read<HoverCubit>().setHovered(false),
-      child: GestureDetector(
-        onTap: () async {
-          final uri = Uri.parse(url);
-          if (await canLaunchUrl(uri)) {
-            await launchUrl(uri, mode: LaunchMode.externalApplication);
-          }
-        },
-        child: BlocBuilder<HoverCubit, bool>(
-          builder: (context, isHovered) {
-            return AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: EdgeInsets.all(isMobile ? 24 : 32),
-              decoration: BoxDecoration(
-                color: context.colors.surface,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: isHovered
-                      ? context.colors.primary
-                      : context.colors.surface,
-                  width: 2,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: isHovered
-                        ? context.colors.shadowStrong
-                        : context.colors.shadow,
-                    blurRadius: isHovered ? 40 : 30,
-                    offset: Offset(0, isHovered ? 15 : 10),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: context.colors.fieldBackground,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(
-                          icon,
-                          color: context.colors.textPrimary,
-                          size: isMobile ? 20 : 24,
-                        ),
-                      ),
-                      AnimatedRotation(
-                        duration: const Duration(milliseconds: 200),
-                        turns: isHovered ? 0.125 : 0,
-                        child: Icon(
-                          Icons.open_in_new,
-                          color: isHovered
-                              ? context.colors.primary
-                              : context.colors.textTertiary,
-                          size: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.inter(
-                      fontSize: isMobile ? 18 : 20,
-                      fontWeight: FontWeight.bold,
-                      color: context.colors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    desc,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.inter(
-                      color: context.colors.textSecondary,
-                      fontSize: isMobile ? 14 : 15,
-                      height: 1.5,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Divider(color: context.colors.borderLight),
-                  const SizedBox(height: 20),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: tags
-                        .map(
-                          (t) => Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: context.colors.tagBackground,
-                              border: Border.all(color: context.colors.border),
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: Text(
-                              t,
-                              style: GoogleFonts.inter(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: context.colors.textTertiary,
-                              ),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                ],
-              ),
-            );
-          },
         ),
       ),
     );

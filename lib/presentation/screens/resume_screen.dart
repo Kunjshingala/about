@@ -1,4 +1,5 @@
 import 'package:about/core/constants/info.dart';
+import 'package:about/core/enums/section.dart';
 import 'package:about/core/theme/app_colors.dart';
 import 'package:about/presentation/blocs/resume/resume_bloc.dart';
 import 'package:about/presentation/widgets/contact_section.dart';
@@ -12,8 +13,8 @@ import 'package:about/presentation/widgets/skills_section.dart';
 import 'package:about/presentation/widgets/stats_section.dart';
 import 'package:about/presentation/widgets/testimonials_section.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ResumeScreen extends StatefulWidget {
   const ResumeScreen({super.key});
@@ -23,119 +24,105 @@ class ResumeScreen extends StatefulWidget {
 }
 
 class _ResumeScreenState extends State<ResumeScreen> {
-  final ScrollController _scrollController = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final ItemScrollController _itemScrollController = ItemScrollController();
+  final ItemPositionsListener _itemPositionsListener = ItemPositionsListener.create();
 
-  final GlobalKey _aboutKey = GlobalKey();
-  final GlobalKey _statsKey = GlobalKey();
-  final GlobalKey _expKey = GlobalKey();
-  final GlobalKey _skillsKey = GlobalKey();
-  final GlobalKey _projectsKey = GlobalKey();
-  final GlobalKey _testimonialsKey = GlobalKey();
-  final GlobalKey _contactKey = GlobalKey();
-
-  void _scrollToSection(GlobalKey key) {
-    final context = key.currentContext;
-    if (context != null) {
-      final box = context.findRenderObject()! as RenderBox;
-      final viewport = RenderAbstractViewport.of(box);
-
-      // Calculate target: reveal offset - navbar height (approx 80px)
-      final target = viewport.getOffsetToReveal(box, 0.0).offset - 80;
-
-      _scrollController.animateTo(
-        target < 0 ? 0 : target,
-        duration: const Duration(milliseconds: 800),
-        curve: Curves.easeInOutQuart,
-      );
-    }
+  List<MapEntry<Section?, Widget>> _getSections() {
+    return [
+      const MapEntry(Section.about, RepaintBoundary(child: HeroSection())),
+      const MapEntry(Section.stats, Padding(padding: EdgeInsets.only(top: 100), child: RepaintBoundary(child: StatsSection()))),
+      const MapEntry(Section.experience, Padding(padding: EdgeInsets.only(top: 120), child: RepaintBoundary(child: ExperienceSection()))),
+      const MapEntry(Section.skills, Padding(padding: EdgeInsets.only(top: 120), child: RepaintBoundary(child: SkillsSection()))),
+      const MapEntry(Section.projects, Padding(padding: EdgeInsets.only(top: 120), child: RepaintBoundary(child: ProjectsSection()))),
+      if (AppInfo.showTestimonials)
+        const MapEntry(Section.testimonials, Padding(padding: EdgeInsets.only(top: 120), child: RepaintBoundary(child: TestimonialsSection()))),
+      if (AppInfo.showContact)
+        const MapEntry(Section.contact, Padding(padding: EdgeInsets.only(top: 120), child: RepaintBoundary(child: ContactSection()))),
+      const MapEntry(null, Padding(padding: EdgeInsets.only(top: 120), child: RepaintBoundary(child: Footer()))),
+    ];
   }
 
-  void _onNavTap(String section) {
+  void _onNavTap(Section section) {
     if (_scaffoldKey.currentState?.isEndDrawerOpen ?? false) {
       Navigator.pop(context);
     }
-
-    switch (section) {
-      case 'About':
-        _scrollToSection(_aboutKey);
-        break;
-      case 'Stats':
-        _scrollToSection(_statsKey);
-        break;
-      case 'Experience':
-        _scrollToSection(_expKey);
-        break;
-      case 'Skills':
-        _scrollToSection(_skillsKey);
-        break;
-      case 'Projects':
-        _scrollToSection(_projectsKey);
-        break;
-      case 'Testimonials':
-        _scrollToSection(_testimonialsKey);
-        break;
-      case 'Contact':
-        _scrollToSection(_contactKey);
-        break;
+    final sections = _getSections();
+    final index = sections.indexWhere((e) => e.key == section);
+    if (index != -1 && _itemScrollController.isAttached) {
+      _itemScrollController.scrollTo(
+        index: index,
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOutQuart,
+        alignment: 0.1, // Scroll slightly below the navbar
+      );
     }
   }
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+    _itemPositionsListener.itemPositions.addListener(_onScroll);
   }
 
   void _onScroll() {
-    final shouldShowLogo = _scrollController.offset <= 50;
+    final positions = _itemPositionsListener.itemPositions.value;
+    if (positions.isEmpty) return;
+
+    final firstItem = positions.cast<ItemPosition?>().firstWhere((p) => p!.index == 0, orElse: () => null);
+    final shouldShowLogo = firstItem == null || firstItem.itemLeadingEdge < -0.1;
+
     if (shouldShowLogo != context.read<ResumeBloc>().state.showLogo) {
-      context
-          .read<ResumeBloc>()
-          .add(LogoVisibilityChanged(showLogo: shouldShowLogo));
+      context.read<ResumeBloc>().add(LogoVisibilityChanged(showLogo: shouldShowLogo));
+    }
+
+    // Determine active section by finding the most prominent section on screen
+    Section? activeSection;
+    final sections = _getSections();
+    
+    ItemPosition? bestPosition;
+    for (final pos in positions) {
+      if (pos.itemLeadingEdge <= 0.4 && pos.itemTrailingEdge > 0.1) {
+        if (bestPosition == null || pos.itemLeadingEdge.abs() < bestPosition.itemLeadingEdge.abs()) {
+          bestPosition = pos;
+        }
+      }
+    }
+    
+    if (bestPosition != null) {
+      final key = sections[bestPosition.index].key;
+      if (key != null) {
+        activeSection = key;
+      }
+    }
+
+    if (activeSection != null &&
+        activeSection != context.read<ResumeBloc>().state.activeSection) {
+      context.read<ResumeBloc>().add(SectionChanged(activeSection));
     }
   }
 
   @override
   void dispose() {
-    _scrollController
-      ..removeListener(_onScroll)
-      ..dispose();
+    _itemPositionsListener.itemPositions.removeListener(_onScroll);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final sections = _getSections();
+
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: context.colors.background,
       endDrawer: MobileDrawer(onNavTap: _onNavTap),
       body: Stack(
         children: [
-          SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              children: [
-                HeroSection(key: _aboutKey),
-                const SizedBox(height: 100),
-                StatsSection(key: _statsKey),
-                const SizedBox(height: 120),
-                ExperienceSection(key: _expKey),
-                const SizedBox(height: 120),
-                SkillsSection(key: _skillsKey),
-                const SizedBox(height: 120),
-                ProjectsSection(key: _projectsKey),
-                if (AppInfo.showTestimonials) ...[
-                  const SizedBox(height: 120),
-                  TestimonialsSection(key: _testimonialsKey),
-                ],
-                if (AppInfo.showContact) ...[
-                  const SizedBox(height: 120),
-                  ContactSection(key: _contactKey),
-                ],
-                const Footer(),
-              ],
-            ),
+          ScrollablePositionedList.builder(
+            itemCount: sections.length,
+            itemBuilder: (context, index) => sections[index].value,
+            itemScrollController: _itemScrollController,
+            itemPositionsListener: _itemPositionsListener,
           ),
           Positioned(
             top: 0,
@@ -143,10 +130,12 @@ class _ResumeScreenState extends State<ResumeScreen> {
             right: 0,
             child: BlocBuilder<ResumeBloc, ResumeState>(
               buildWhen: (previous, current) =>
-                  previous.showLogo != current.showLogo,
+                  previous.showLogo != current.showLogo ||
+                  previous.activeSection != current.activeSection,
               builder: (context, state) {
                 return GlassNavbar(
                   showLogo: state.showLogo,
+                  activeSection: state.activeSection,
                   onNavTap: _onNavTap,
                   onMenuTap: () => _scaffoldKey.currentState?.openEndDrawer(),
                 );

@@ -154,6 +154,21 @@ class SkillsSection extends StatelessWidget {
                 .slideX(begin: -0.1),
             const SizedBox(height: 24),
 
+            // AI & Agentic Development
+            _skillCategory(
+                    'AI-Assisted & Agentic Development',
+                    [
+                      'Claude Code',
+                      'Codex',
+                      'Antigravity',
+                      'Cursor/Copilot',
+                    ],
+                    context)
+                .animate()
+                .fadeIn(duration: 600.ms, delay: 750.ms)
+                .slideX(begin: -0.1),
+            const SizedBox(height: 24),
+
             // Tools I Use Daily
             _skillCategory(
                     'Tools I Use Daily',

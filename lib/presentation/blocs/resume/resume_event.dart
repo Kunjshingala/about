@@ -8,11 +8,11 @@ abstract class ResumeEvent extends Equatable {
 }
 
 class SectionChanged extends ResumeEvent {
-  const SectionChanged(this.sectionName);
-  final String sectionName;
+  const SectionChanged(this.section);
+  final Section section;
 
   @override
-  List<Object?> get props => [sectionName];
+  List<Object?> get props => [section];
 }
 
 class LogoVisibilityChanged extends ResumeEvent {
