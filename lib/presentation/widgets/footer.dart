@@ -186,7 +186,7 @@ class _FooterState extends State<Footer> {
                   width: 100,
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: _footerLink('Twitter', AppInfo.twitterUrl, context),
+                    child: _footerLink('X (Twitter)', AppInfo.twitterUrl, context),
                   ),
                 ),
             ],

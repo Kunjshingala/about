@@ -25,10 +25,10 @@ class AppInfo {
   static const String githubUrl = 'https://github.com/Kunjshingala';
   static const String linkedinUrl =
       'https://www.linkedin.com/in/kunjshingala03/';
-  static const String twitterUrl = 'https://twitter.com/kunjshingala';
+  static const String twitterUrl = 'https://x.com/kunj_shingala0';
 
   // Social Media Visibility Flags
-  static const bool showTwitter = false;
+  static const bool showTwitter = true;
   static const bool showGithub = true;
   static const bool showLinkedIn = true;
 
