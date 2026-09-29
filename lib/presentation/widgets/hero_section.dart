@@ -12,16 +12,28 @@ import 'package:url_launcher/link.dart';
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
 
+  // Max width for the bio column — keeps prose readable on wide desktops.
+  static const double _bioMaxWidth = 640.0;
+
   @override
   Widget build(BuildContext context) {
     final width = Responsive.screenWidth(context);
     final isMobile = Responsive.isMobile(context);
 
-    final headerSize = Dimensions.getResponsiveSize(
+    // Name is the single largest element on the page: fluid 56–96px.
+    final nameSize = Dimensions.getResponsiveSize(
       width,
-      factor: 0.08,
-      min: 28,
-      max: 48,
+      factor: 0.085,
+      min: 52,
+      max: 96,
+    );
+
+    // Job title sits just below — smaller, medium weight.
+    final titleSize = Dimensions.getResponsiveSize(
+      width,
+      factor: 0.022,
+      min: 16,
+      max: 22,
     );
 
     return Center(
@@ -29,10 +41,12 @@ class HeroSection extends StatelessWidget {
         width: double.infinity,
         constraints: const BoxConstraints(maxWidth: Dimensions.maxWidth),
         padding: EdgeInsets.symmetric(
-            horizontal: isMobile ? width * 0.05 : Dimensions.spaceXXL),
+          horizontal: isMobile ? width * 0.05 : Dimensions.spaceXXL,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Top breathing room (navbar offset).
             SizedBox(
               height: Dimensions.getResponsiveSize(
                     width,
@@ -43,120 +57,104 @@ class HeroSection extends StatelessWidget {
                   80,
             ),
 
-            // "Hi, I'm" text
-            RichText(
-              text: TextSpan(
-                style: GoogleFonts.inter(
-                  fontSize: headerSize,
-                  fontWeight: FontWeight.w400,
-                  color: context.colors.textPrimary,
-                  height: 1.3,
-                ),
-                children: [
-                  const TextSpan(text: "Hi, I'm "),
-                  TextSpan(
-                    text: AppInfo.firstName,
-                    style: GoogleFonts.inter(
-                      fontWeight: FontWeight.w800, // Extra bold to stand out
-                      color: context.colors.textPrimary,
-                    ),
-                  ),
-                ],
+            // ── Full name — largest text on the page ──────────────────────
+            Text(
+              AppInfo.fullName,
+              style: GoogleFonts.inter(
+                fontSize: nameSize,
+                fontWeight: FontWeight.w800,
+                color: context.colors.textPrimary,
+                height: 1.05,
+                letterSpacing: -2.0,
               ),
-            ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.2),
+            ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.15),
 
             const SizedBox(height: Dimensions.spaceM),
 
-            // Role
+            // ── Job title — directly under name, smaller, medium weight ───
             Text(
               AppInfo.jobTitle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
               style: GoogleFonts.inter(
-                fontSize: isMobile ? 18 : 20,
+                fontSize: titleSize,
                 fontWeight: FontWeight.w500,
                 color: context.colors.textSecondary,
+                letterSpacing: 0.1,
               ),
-            ).animate().fadeIn(duration: 800.ms, delay: 200.ms),
+            ).animate().fadeIn(duration: 800.ms, delay: 150.ms),
 
-            const SizedBox(height: Dimensions.spaceL),
+            const SizedBox(height: Dimensions.spaceXL),
 
-            // Bio
-            Text(
-              AppInfo.bio,
-              style: GoogleFonts.inter(
-                fontSize: isMobile ? 14 : 16,
-                color: context.colors.textSecondary,
-                height: 1.7,
+            // ── Bio — capped at ~640px on desktop, full-width on mobile ───
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: isMobile ? double.infinity : _bioMaxWidth,
               ),
-            ).animate().fadeIn(duration: 800.ms, delay: 400.ms),
+              child: Text(
+                AppInfo.bio,
+                style: GoogleFonts.inter(
+                  fontSize: isMobile ? 14 : 16,
+                  color: context.colors.textSecondary,
+                  height: 1.75,
+                ),
+              ),
+            ).animate().fadeIn(duration: 800.ms, delay: 300.ms),
 
             const SizedBox(height: Dimensions.spaceXXL),
 
-            // Action buttons
-            Wrap(
+            // ── CTA buttons ───────────────────────────────────────────────
+            const Wrap(
               spacing: Dimensions.spaceM,
-              runSpacing: Dimensions.spaceM / 1.33, // approx 12
+              runSpacing: Dimensions.spaceS + 4, // ~12
               children: [
-                _ctaButton(
-                  'Download CV/Resume',
-                  true,
-                  AppInfo.resumeDownloadUrl,
-                  context: context,
+                _HoverCTAButton(
+                  title: 'Download CV/Resume',
+                  isPrimary: true,
+                  url: AppInfo.resumeDownloadUrl,
                 ),
-                _ctaButton(
-                  'View CV/Resume',
-                  false,
-                  AppInfo.resumeViewUrl,
-                  context: context,
+                _HoverCTAButton(
+                  title: 'View CV/Resume',
+                  isPrimary: false,
+                  url: AppInfo.resumeViewUrl,
                 ),
               ],
-            ).animate().fadeIn(duration: 800.ms, delay: 600.ms),
+            ).animate().fadeIn(duration: 800.ms, delay: 500.ms),
 
             const SizedBox(height: Dimensions.spaceXXL),
 
-            // Social icons
-            Wrap(
+            // ── Social icons ──────────────────────────────────────────────
+            const Wrap(
               spacing: Dimensions.spaceL,
               runSpacing: Dimensions.spaceM,
               children: [
                 if (AppInfo.showGithub)
-                  _socialIcon(FontAwesomeIcons.github, AppInfo.githubUrl),
+                  _HoverSocialIcon(
+                    icon: FontAwesomeIcons.github,
+                    url: AppInfo.githubUrl,
+                  ),
                 if (AppInfo.showLinkedIn)
-                  _socialIcon(
-                    FontAwesomeIcons.linkedin,
-                    AppInfo.linkedinUrl,
+                  _HoverSocialIcon(
+                    icon: FontAwesomeIcons.linkedin,
+                    url: AppInfo.linkedinUrl,
                   ),
                 if (AppInfo.showTwitter)
-                  _socialIcon(
-                    FontAwesomeIcons.xTwitter,
-                    AppInfo.twitterUrl,
+                  _HoverSocialIcon(
+                    icon: FontAwesomeIcons.xTwitter,
+                    url: AppInfo.twitterUrl,
                   ),
-                _socialIcon(
-                  FontAwesomeIcons.envelope,
-                  AppInfo.emailAddress,
+                _HoverSocialIcon(
+                  icon: FontAwesomeIcons.envelope,
+                  url: AppInfo.emailAddress,
                 ),
               ],
-            ).animate().fadeIn(duration: 800.ms, delay: 800.ms),
+            ).animate().fadeIn(duration: 800.ms, delay: 700.ms),
           ],
         ),
       ),
     );
   }
-
-  Widget _ctaButton(
-    String title,
-    bool isPrimary,
-    String url, {
-    required BuildContext context,
-  }) {
-    return _HoverCTAButton(title: title, isPrimary: isPrimary, url: url);
-  }
-
-  Widget _socialIcon(FaIconData icon, String url) {
-    return _HoverSocialIcon(icon: icon, url: url);
-  }
 }
+
+// ─── CTA Button ───────────────────────────────────────────────────────────────
 
 class _HoverCTAButton extends StatelessWidget {
   const _HoverCTAButton({
@@ -164,6 +162,7 @@ class _HoverCTAButton extends StatelessWidget {
     required this.isPrimary,
     required this.url,
   });
+
   final String title;
   final bool isPrimary;
   final String url;
@@ -184,12 +183,13 @@ class _HoverCTAButton extends StatelessWidget {
               padding: EdgeInsets.symmetric(
                 horizontal: isMobile ? Dimensions.spaceL : Dimensions.spaceXL,
                 vertical: isMobile
-                    ? Dimensions.spaceM / 1.33
-                    : Dimensions.spaceM / 1.14, // approx 12, 14
+                    ? Dimensions.spaceM / 1.33 // ~12
+                    : Dimensions.spaceM / 1.14, // ~14
               ),
               decoration: BoxDecoration(
-                color:
-                    isPrimary ? context.colors.primary : context.colors.surface,
+                color: isPrimary
+                    ? context.colors.primary
+                    : context.colors.surface,
                 border: isPrimary
                     ? null
                     : Border.all(
@@ -227,8 +227,11 @@ class _HoverCTAButton extends StatelessWidget {
   }
 }
 
+// ─── Social Icon ──────────────────────────────────────────────────────────────
+
 class _HoverSocialIcon extends StatelessWidget {
   const _HoverSocialIcon({required this.icon, required this.url});
+
   final FaIconData icon;
   final String url;
 
