@@ -7,6 +7,13 @@ class ProjectConstants {
   // Feature flag to toggle between dynamic GitHub projects and static hardcoded ones.
   static const bool isGitHubDynamic = true;
 
+  /// Repositories shown in the "Featured Projects" section, in display order.
+  /// Use the exact repository name. Leave empty to feature all public repos.
+  static const List<String> featuredRepoNames = [
+    'LinkHive',
+    'Synchro-Share',
+  ];
+
   /// List of GitHub repository names to exclude from the portfolio.
   /// Use the exact repository name as shown in the URL (e.g., 'portfolio-test').
   static const List<String> excludedRepoNames = [
